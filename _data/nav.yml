@@ -48,3 +48,20 @@ toc:
     class: external-link
     target: external
     url: https://github.com/google/agi/releases
+  - title: FROM G3DOC - docs
+    url: docs/
+    subnav:
+      - title: Requirements
+        url: docs/requirements
+      - title: ARM Counters
+        url: docs/arm-counters
+      - title: Extensions
+        url: docs/extensions
+      - title: GPU counters
+        url: docs/gpu-counters
+      - title: Install
+        url: docs/install
+      - title: Troubleshooting
+        url: docs/troubleshooting
+      - title: Tutorial
+        url: docs/tutorial
