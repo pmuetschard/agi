@@ -1,5 +1,5 @@
 ---
-title: ARM Counters
+title: Arm® Mali™ GPU Counters
 layout: default
 permalink: /gpu-counters/arm
 ---

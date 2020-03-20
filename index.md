@@ -1,5 +1,6 @@
 ---
 layout: home
+title: Home
 ---
 
 <div class="row">
@@ -9,7 +10,7 @@ layout: home
 
   <div class="col2-l">
     <h1>Android GPU Inspector</h1>
-    <p>A single tool that will help you profile and debug graphics on Android across Qualcomm® Adreno™ GPUs and Mali GPUs.</p>
+    <p>A single tool that will help you profile and debug graphics on Android across Qualcomm® Adreno™ GPUs and Arm® Mali™ GPUs.</p>
     <br/>
     <p><a class="home-signup" href="https://d.android.com/games/preview">Sign-up for Developer Preview</a></p>
   </div>

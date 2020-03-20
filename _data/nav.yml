@@ -13,9 +13,9 @@ toc:
   - title: GPU counters
     url: gpu-counters/
     subnav:
-      - title: ARM Counters
+      - title: Arm® Mali™ Counters
         url: gpu-counters/arm
-      - title: Qualcomm Counters
+      - title: Qualcomm® Adreno™ Counters
         url: gpu-counters/qualcomm
   - title: System requirements
     url: requirements
