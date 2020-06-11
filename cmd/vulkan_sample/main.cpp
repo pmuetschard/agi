@@ -904,15 +904,13 @@ int main(int argc, const char** argv) {
   }
 
   {
-    VkDescriptorSetLayoutBinding bindings[3] = {
+    VkDescriptorSetLayoutBinding bindings[2] = {
         VkDescriptorSetLayoutBinding{0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1,
                                      VK_SHADER_STAGE_VERTEX_BIT, nullptr},
-        VkDescriptorSetLayoutBinding{1, VK_DESCRIPTOR_TYPE_SAMPLER, 1,
-                                     VK_SHADER_STAGE_FRAGMENT_BIT, nullptr},
-        VkDescriptorSetLayoutBinding{2, VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1,
+        VkDescriptorSetLayoutBinding{1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1,
                                      VK_SHADER_STAGE_FRAGMENT_BIT, nullptr}};
     VkDescriptorSetLayoutCreateInfo create_info{
-        VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO, nullptr, 0, 3,
+        VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO, nullptr, 0, 2,
         bindings};
 
     REQUIRE_SUCCESS(vkCreateDescriptorSetLayout(device, &create_info, nullptr,
@@ -1148,11 +1146,7 @@ int main(int argc, const char** argv) {
                                          kBufferingCount,
                                      },
                                      VkDescriptorPoolSize{
-                                         VK_DESCRIPTOR_TYPE_SAMPLER,
-                                         kBufferingCount,
-                                     },
-                                     VkDescriptorPoolSize{
-                                         VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
+                                         VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
                                          kBufferingCount,
                                      }};
     VkDescriptorPoolCreateInfo create_info{
@@ -1272,32 +1266,22 @@ int main(int argc, const char** argv) {
 
       VkDescriptorImageInfo sampler_info{
           sampler,
-          VK_NULL_HANDLE,
-          VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-      };
-
-      VkDescriptorImageInfo view_info{
-          VK_NULL_HANDLE,
           image_view,
           VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
       };
 
-      VkWriteDescriptorSet writes[3]{
+      VkWriteDescriptorSet writes[2]{
           VkWriteDescriptorSet{VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, nullptr,
                                descriptor_sets[i], 0, 0, 1,
                                VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, nullptr,
                                &buffer_info, nullptr},
           VkWriteDescriptorSet{VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, nullptr,
                                descriptor_sets[i], 1, 0, 1,
-                               VK_DESCRIPTOR_TYPE_SAMPLER, &sampler_info,
-                               nullptr, nullptr},
-          VkWriteDescriptorSet{VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, nullptr,
-                               descriptor_sets[i], 2, 0, 1,
-                               VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, &view_info,
+                               VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, &sampler_info,
                                nullptr, nullptr},
       };
 
-      vkUpdateDescriptorSets(device, 3, writes, 0, nullptr);
+      vkUpdateDescriptorSets(device, 2, writes, 0, nullptr);
     }
 
     {

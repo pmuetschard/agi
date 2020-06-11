@@ -18,10 +18,13 @@
 layout(location = 0) out vec4 out_color;
 layout (location = 1) in vec2 texcoord;
 
-layout(set = 0, binding = 1) uniform sampler default_sampler;
-layout(set = 0, binding = 2) uniform texture2D default_texture;
+layout(set = 0, binding = 1) uniform sampler2D default_texture;
+
+vec4 getColor(sampler2D image) {
+    return texture(image, texcoord);
+}
 
 void main() {
-    vec4 color = texture(sampler2D(default_texture, default_sampler), texcoord);
+    vec4 color = getColor(default_texture);
     out_color = vec4(max(color.xyz, vec3(0.1, 0.1, 0.1)), 1.0);
 }
