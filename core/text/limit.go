@@ -42,8 +42,8 @@ func NewLimitWriter(to io.Writer, limit int, elisionMarker string) *LimitWriter 
 }
 
 // Write will write as much of the string as it can to the underlying writer, if
-// he total number of runes written would exceed the limit, the last part of the
-// string is replaced by the elisionMarker.
+// the total number of runes written would exceed the limit, the last part of
+// the string is replaced by the elisionMarker.
 // This method may buffer data, you must call Flush for it all to appear in the
 // underlying stream.
 func (w *LimitWriter) Write(data []byte) (int, error) {

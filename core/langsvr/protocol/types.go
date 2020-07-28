@@ -421,7 +421,7 @@ type ParameterInformation struct {
 	// The label of this signature. Will be shown in the UI.
 	Label string `json:"label"`
 
-	// he human-readable doc-comment of this signature.
+	// The human-readable doc-comment of this signature.
 	// Will be shown in the UI but can be omitted.
 	Documentation *string `json:"documentation,omitempty"`
 }
