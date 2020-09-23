@@ -19,6 +19,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/google/gapid/core/data/binary"
 	"github.com/google/gapid/core/data/endian"
@@ -69,6 +70,8 @@ type GlobalState struct {
 
 	// AddTag is called when we want to tag report item.
 	AddTag func(msgID uint32, msg *stringtable.Msg)
+
+	Profile map[string]time.Duration
 }
 
 // State represents the graphics state for a single API.
@@ -108,6 +111,7 @@ func NewStateWithAllocator(allocator memory.Allocator, memoryLayout *device.Memo
 		Memory:       memory.NewPools(),
 		APIs:         map[ID]State{},
 		Allocator:    allocator,
+		Profile:      map[string]time.Duration{},
 	}
 }
 

@@ -25,6 +25,7 @@
     "context"
     "fmt"
     "strings"
+    "time"
 
     "github.com/google/gapid/core/event/task"
     "github.com/google/gapid/core/log"
@@ -158,6 +159,18 @@
       func (ϟc *{{$name}}) Mutate(§
     {{end}}
         ϟctx context.Context, ϟi api.CmdID, ϟg *api.GlobalState, ϟb *builder.Builder, ϟw api.StateWatcher) error {
+
+      ϟstartTime := time.Now()
+      defer func() {
+        ϟg.Profile["{{$name}}"] += time.Since(ϟstartTime)
+        {{if eq $name "VkDestroyDevice"}}
+        ϟps := ""
+        for ϟpK, ϟpV := range ϟg.Profile {
+          ϟps += fmt.Sprintf("%s:%d,", ϟpK, ϟpV.Nanoseconds())
+        }
+        fmt.Println(ϟps)
+        {{end}}
+      }()
 
       {{if not $r}}ϟb = nil // @no_replay{{end}}
 
