@@ -26,9 +26,9 @@ def gapid_go_dependencies():
         name = "com_github_google_go_github",
         organization = "google",
         project = "go-github",
-        commit = "2e3e74fa920e7d6278b7a9737ab5c8b7b1480294",  # 29.0.3
+        commit = "6c3a8a15c7c49134d4d2f4b42a8c2edf530ced14",  # 33.0.0
         importpath = "github.com/google/go-github",
-        sha256 = "5c72eae85dd971e31776cc97e3cac7e57acdef253d896d649d9d520f7b990ea4",
+        sha256 = "1e2901d2dab3e7d7c7c12e6e81bfd3afe308fab2ab2c23ce035ff34763bd1bd1",
     )
 
     # Dependency of com_github_google_go_github.
@@ -36,9 +36,9 @@ def gapid_go_dependencies():
         name = "com_github_google_go_querystring",
         organization = "google",
         project = "go-querystring",
-        commit = "c8c88dbee036db4e4808d1f2ec8c2e15e11c3f80",
+        commit = "55faf79c297ffe9e26d034acafd0c9f614ad9da9",
         importpath = "github.com/google/go-querystring",
-        sha256 = "be509de2d315358db459f40262ca34d7dceb0d59d4119addf880562b10710853",
+        sha256 = "5990217e122cad015e3caedb1fcdfd658483864e7d2844784915aa7d53e4ef74",
     )
 
     _maybe(_github_go_repository,
@@ -54,18 +54,18 @@ def gapid_go_dependencies():
         name = "org_golang_google_grpc",
         organization = "grpc",
         project = "grpc-go",
-        commit = "142182889d38b76209f1d9f1d8e91d7608aff542",  # 1.28.0
+        commit = "f74f0337644653eba7923908a4d7f79a4f3a267b",  # 1.36.0
         importpath = "google.golang.org/grpc",
-        sha256 = "f969e1c33b79d4c03527b8163f257f50257ac9dcb488859182a548ea39724a4d",
+        sha256 = "f6bd026b62bde7703731a5c02f956fe44021c172c2aec5e97a999f8891f8e7f7",
     )
 
     _maybe(_github_go_repository,
         name = "org_golang_x_crypto",
         organization = "golang",
         project = "crypto",
-        commit = "1b76d66859c6111b3d5c3ea6600ea44dc188bf12",
+        commit = "5ea612d1eb830b38bc4e914e37f55311eb58adce",
         importpath = "golang.org/x/crypto",
-        sha256 = "daaec7016b1d81d05505bd50534ef62b9fe3cf367b39ad805b14cec62e3648f3",
+        sha256 = "98577f4d27b16f827918c0d5270228585b4b02f9ee2ff1d12acf38f6af0cf7f5",
     )
 
     # Dependency of org_golang_x_tools.
@@ -73,18 +73,18 @@ def gapid_go_dependencies():
         name = "org_golang_x_mod",
         organization = "golang",
         project = "mod",
-        commit = "e5e73c1b9c72835114eb6daab038373d39515006",
+        commit = "6ce8bb3f08e0e47592fe93e007071d86dcf214bb",  # 0.4.1
         importpath = "golang.org/x/mod",
-        sha256 = "5e727c7ec77372e0a37fc535e81d6f8b9423bdcbc66ee506994d3ac2c3ce704b",
+        sha256 = "7b5008b98e341459375f1de23007b09339d1fe5d6f3c5e4b4ed7d12a002471de",
     )
 
     _maybe(_github_go_repository,
         name = "org_golang_x_net",
         organization = "golang",
         project = "net",
-        commit = "244492dfa37ae2ce87222fd06250a03160745faa",
+        commit = "e18ecbb051101a46fc263334b127c89bc7bff7ea",
         importpath = "golang.org/x/net",
-        sha256 = "d3d90167ae827ee4a2fc2db7ce23142410974da41ca2e95f8832b57facdc7190",
+        sha256 = "e7ed488428e41afb7f1f69f952d6fd75cccb31f2e2540c06c2d38563bd697de9",
     )
 
     # Dependency of org_golang_x_net.
@@ -92,9 +92,9 @@ def gapid_go_dependencies():
         name = "org_golang_x_text",
         organization = "golang",
         project = "text",
-        commit = "06d492aade888ab8698aad35476286b7b555c961",
+        commit = "e3aa4adf54f644ca0cb35f1f1fb19b239c40ef04",
         importpath = "golang.org/x/text",
-        sha256 = "d0076e2957c45a9ded9853bd398257f4d8fd8fe74d3953a7049a0474629b78a2",
+        sha256 = "abfdd8c49e0895a7e6db346a9f83602ff398d5a34592b21a77403eb6a7c65d12",
     )
 
     # Dependency of org_golang_x_mod.
@@ -102,9 +102,9 @@ def gapid_go_dependencies():
         name = "org_golang_x_xerrors",
         organization = "golang",
         project = "xerrors",
-        commit = "9bdfabe68543c54f90421aeb9a60ef8061b5b544",
+        commit = "5ec99f83aff198f5fbd629d6c8d8eb38a04218ca",
         importpath = "golang.org/x/xerrors",
-        sha256 = "757fe99de4d23e10a3343e9790866211ecac0458c5268da43e664a5abeee27e3",
+        sha256 = "cd9de801daf63283be91a76d7f91e8a9541798c5c0e8bcfb7ee804b78a493b02",
     )
 
 
