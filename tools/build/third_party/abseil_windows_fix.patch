@@ -1,0 +1,181 @@
+--- a/absl/BUILD.bazel
++++ b/absl/BUILD.bazel
+@@ -16,15 +16,22 @@
+
+ load(
+     ":compiler_config_setting.bzl",
+-    "create_llvm_config",
++    "create_compiler_config",
+ )
+
+ package(default_visibility = ["//visibility:public"])
+
+ licenses(["notice"])
+
+-create_llvm_config(
++create_compiler_config(
+     name = "llvm_compiler",
++    value = "llvm",
++    visibility = [":__subpackages__"],
++)
++
++create_compiler_config(
++    name = "msvc_compiler",
++    value = "msvc-cl",
+     visibility = [":__subpackages__"],
+ )
+
+
+--- a/absl/base/BUILD.bazel
++++ b/absl/base/BUILD.bazel
+@@ -160,7 +160,7 @@ cc_library(
+     ],
+     copts = ABSL_DEFAULT_COPTS,
+     linkopts = select({
+-        "//absl:windows": [],
++        "//absl:msvc_compiler": [],
+         "//absl:wasm": [],
+         "//conditions:default": ["-pthread"],
+     }) + ABSL_DEFAULT_LINKOPTS,
+@@ -220,7 +220,7 @@ cc_library(
+     ],
+     copts = ABSL_DEFAULT_COPTS,
+     linkopts = select({
+-        "//absl:windows": [
++        "//absl:msvc_compiler": [
+             "-DEFAULTLIB:advapi32.lib",
+         ],
+         "//absl:wasm": [],
+
+--- a/absl/compiler_config_setting.bzl
++++ b/absl/compiler_config_setting.bzl
+@@ -15,7 +15,7 @@
+
+ """Creates config_setting that allows selecting based on 'compiler' value."""
+
+-def create_llvm_config(name, visibility):
++def create_compiler_config(name, value, visibility):
+     # The "do_not_use_tools_cpp_compiler_present" attribute exists to
+     # distinguish between older versions of Bazel that do not support
+     # "@bazel_tools//tools/cpp:compiler" flag_value, and newer ones that do.
+@@ -26,13 +26,13 @@ def create_llvm_config(name, visibility):
+         native.config_setting(
+             name = name,
+             flag_values = {
+-                "@bazel_tools//tools/cpp:compiler": "llvm",
++                "@bazel_tools//tools/cpp:compiler": value,
+             },
+             visibility = visibility,
+         )
+     else:
+         native.config_setting(
+             name = name,
+-            values = {"compiler": "llvm"},
++            values = {"compiler": value},
+             visibility = visibility,
+         )
+
+--- a/absl/copts/configure_copts.bzl
++++ b/absl/copts/configure_copts.bzl
+@@ -22,7 +22,7 @@ load(
+ )
+
+ ABSL_DEFAULT_COPTS = select({
+-    "//absl:windows": ABSL_MSVC_FLAGS,
++    "//absl:msvc_compiler": ABSL_MSVC_FLAGS,
+     "//absl:llvm_compiler": ABSL_LLVM_FLAGS,
+     "//conditions:default": ABSL_GCC_FLAGS,
+ })
+@@ -30,13 +30,13 @@ ABSL_DEFAULT_COPTS = select({
+ # in absence of modules (--compiler=gcc or -c opt), cc_tests leak their copts
+ # to their (included header) dependencies and fail to build outside absl
+ ABSL_TEST_COPTS = ABSL_DEFAULT_COPTS + select({
+-    "//absl:windows": ABSL_MSVC_TEST_FLAGS,
++    "//absl:msvc_compiler": ABSL_MSVC_TEST_FLAGS,
+     "//absl:llvm_compiler": ABSL_LLVM_TEST_FLAGS,
+     "//conditions:default": ABSL_GCC_TEST_FLAGS,
+ })
+
+ ABSL_DEFAULT_LINKOPTS = select({
+-    "//absl:windows": ABSL_MSVC_LINKOPTS,
++    "//absl:msvc_compiler": ABSL_MSVC_LINKOPTS,
+     "//conditions:default": [],
+ })
+
+
+--- a/absl/debugging/BUILD.bazel
++++ b/absl/debugging/BUILD.bazel
+@@ -66,7 +66,7 @@ cc_library(
+     ],
+     copts = ABSL_DEFAULT_COPTS,
+     linkopts = ABSL_DEFAULT_LINKOPTS + select({
+-        "//absl:windows": ["-DEFAULTLIB:dbghelp.lib"],
++        "//absl:msvc_compiler": ["-DEFAULTLIB:dbghelp.lib"],
+         "//conditions:default": [],
+     }),
+     deps = [
+@@ -86,11 +86,11 @@ cc_test(
+     name = "symbolize_test",
+     srcs = ["symbolize_test.cc"],
+     copts = ABSL_TEST_COPTS + select({
+-        "//absl:windows": ["/Z7"],
++        "//absl:msvc_compiler": ["/Z7"],
+         "//conditions:default": [],
+     }),
+     linkopts = ABSL_DEFAULT_LINKOPTS + select({
+-        "//absl:windows": ["/DEBUG"],
++        "//absl:msvc_compiler": ["/DEBUG"],
+         "//conditions:default": [],
+     }),
+     deps = [
+@@ -148,7 +148,7 @@ cc_test(
+     srcs = ["failure_signal_handler_test.cc"],
+     copts = ABSL_TEST_COPTS,
+     linkopts = select({
+-        "//absl:windows": [],
++        "//absl:msvc_compiler": [],
+         "//absl:wasm": [],
+         "//conditions:default": ["-pthread"],
+     }) + ABSL_DEFAULT_LINKOPTS,
+
+--- a/absl/random/internal/BUILD.bazel
++++ b/absl/random/internal/BUILD.bazel
+@@ -75,7 +75,7 @@ cc_library(
+     ],
+     copts = ABSL_DEFAULT_COPTS,
+     linkopts = ABSL_DEFAULT_LINKOPTS + select({
+-        "//absl:windows": ["-DEFAULTLIB:bcrypt.lib"],
++        "//absl:msvc_compiler": ["-DEFAULTLIB:bcrypt.lib"],
+         "//conditions:default": [],
+     }),
+     deps = [
+@@ -98,7 +98,7 @@ cc_library(
+     ],
+     copts = ABSL_DEFAULT_COPTS,
+     linkopts = select({
+-        "//absl:windows": [],
++        "//absl:msvc_compiler": [],
+         "//absl:wasm": [],
+         "//conditions:default": ["-pthread"],
+     }) + ABSL_DEFAULT_LINKOPTS,
+@@ -320,7 +320,7 @@ cc_library(
+         "randen_hwaes.h",
+     ],
+     copts = ABSL_DEFAULT_COPTS + ABSL_RANDOM_RANDEN_COPTS + select({
+-        "//absl:windows": [],
++        "//absl:msvc_compiler": [],
+         "//conditions:default": ["-Wno-pass-failed"],
+     }),
+     linkopts = ABSL_DEFAULT_LINKOPTS,
+
+--- a/absl/synchronization/BUILD.bazel
++++ b/absl/synchronization/BUILD.bazel
+@@ -89,7 +89,7 @@ cc_library(
+     ],
+     copts = ABSL_DEFAULT_COPTS,
+     linkopts = select({
+-        "//absl:windows": [],
++        "//absl:msvc_compiler": [],
+         "//absl:wasm": [],
+         "//conditions:default": ["-pthread"],
+     }) + ABSL_DEFAULT_LINKOPTS,
