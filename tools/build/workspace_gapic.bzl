@@ -33,8 +33,8 @@ def gapic_dependencies(no_maven = False, no_swt = False, no_jface = False, local
         locals = locals,
         organization = "grpc",
         project = "grpc-java",
-        commit = "3dbd250eae2c5e4f4e5e7046c6573805cc0dcc29",  # 1.28.0
-        sha256 = "988cde6fa4cbbbdad4b13c646be17d079ae961a23f4479f6520aaed3baab019b"
+        commit = "a5323492654dfeaf7de2fca06bc72be60b31c1e0",  # 1.36.0
+        sha256 = "ee72d4d98a19cee59651601a81cf8b65e7fd9f9ce1736762c4d41e64b8ff2a39"
     )
 
     if not no_maven:
@@ -44,63 +44,63 @@ def gapic_dependencies(no_maven = False, no_swt = False, no_jface = False, local
             maven_jar,
             name = "io_grpc_api",
             locals = locals,
-            artifact = "io.grpc:grpc-api:1.28.0",
-            sha256 = "10db0e02a85601d38da1b77bfcd7ae08f56b719a5e22aae9894a19c64b0fa8ce",
-            sha256_src = "a1ecf073671930e4883525cfa11850f04ba78b73f1e8434b81a0b2bf9b2f5927",
+            artifact = "io.grpc:grpc-api:1.36.0",
+            sha256 = "3226c41a2d08a5158632001760dacb951165548d4a4248062aafa5bf2c00b10f",
+            sha256_src = "fd7d20ca189d555ec3c460a9eed8ba67369bd6497c51eb20bc4c825dd701f19d",
         )
 
         maybe_repository(
             maven_jar,
             name = "io_grpc_context",
             locals = locals,
-            artifact = "io.grpc:grpc-context:1.28.0",
-            sha256 = "cc57df006555be067af2a6ae9c6510bd7ed40a2dc1af278ceb4e491ce7f184de",
-            sha256_src = "d0f932244bee0f4c497646b5d94baa13877f4eddc4623ec6007dd5698253b421",
+            artifact = "io.grpc:grpc-context:1.36.0",
+            sha256 = "2cc9440617bb8e644435ee5d2ea3fb149eca8f7689e33e2e173ba84b573549e4",
+            sha256_src = "366a2f0ed6cc8d66e56eb71f3b6122fda6f74373fe04da9288e727366a82100c",
         )
 
         maybe_repository(
             maven_jar,
             name = "io_grpc_core",
             locals = locals,
-            artifact = "io.grpc:grpc-core:1.28.0",
-            sha256 = "be7754fd1bcc58d25009e2f8aff5d5bb243ca0b8acf969b77b2ee606c2a1fcc3",
-            sha256_src = "6943ae4fbef30cd9192213fd220a62a60f751048ee11c78cce277f95d3a36101",
+            artifact = "io.grpc:grpc-core:1.36.0",
+            sha256 = "dcdf193caa7f772eb794cfce4e005c477dcb8870009e0f8abfc41f8de38eaa24",
+            sha256_src = "54400629b279e80595afece40c7315769551a289747179589a242e572251febf",
         )
 
         maybe_repository(
             maven_jar,
             name = "io_grpc_okhttp",
             locals = locals,
-            artifact = "io.grpc:grpc-okhttp:1.28.0",
-            sha256 = "6e7a080c064b2f9b3639b576d0bdfb4c5180616ce88df7d4211cbf952691e28c",
-            sha256_src = "c37f1317dbc93092e38d5ad6627f80fa595be3daed4484d9c8c71de0d6dce800",
+            artifact = "io.grpc:grpc-okhttp:1.36.0",
+            sha256 = "7bcb0311c339e0767f2a383845c19f3a9a0364437554d3e7d5fc0be78af4bd31",
+            sha256_src = "3cc925162813f8a1793b9a3291821ca15c9302ab63b562c87a7f70a55d4a4e4b",
         )
 
         maybe_repository(
             maven_jar,
             name = "io_grpc_protobuf",
             locals = locals,
-            artifact = "io.grpc:grpc-protobuf:1.28.0",
-            sha256 = "a48ef62c55e2bd92325ce0924b60363cfb00d274ba1ab281dc8d9c568fd48fd8",
-            sha256_src = "52148a963d712418ed8c8378635863998c33db90e89fcbdfb75009068916f0f7",
+            artifact = "io.grpc:grpc-protobuf:1.36.0",
+            sha256 = "0aec2713ff54ffe40b3c6411c26b233a8e0ab93fe8b7a494575047282a3801be",
+            sha256_src = "d8d8e72071934a9417f471d16919d0d2cfc78c1f1593bd0c6224bd719900d312",
         )
 
         maybe_repository(
             maven_jar,
             name = "io_grpc_protobuf_lite",
             locals = locals,
-            artifact = "io.grpc:grpc-protobuf-lite:1.28.0",
-            sha256 = "5dbcf11cec631fa1b99b3aa338b8f306dbf660f127126f29efc4218166c44857",
-            sha256_src = "844585c241a3a021a5f2e9f75881d8da118f842672f03a654d5abb7d1c24cf9f",
+            artifact = "io.grpc:grpc-protobuf-lite:1.36.0",
+            sha256 = "c23ee011bb630e9aec3994a8731a2920327cd1b3657584edc8b83d5aa47e2a42",
+            sha256_src = "42b4e3a6bc36bdecaaa70f4fe803970ddcc3905249b0b9c14ee2258ceee41867",
         )
 
         maybe_repository(
             maven_jar,
             name = "io_grpc_stub",
             locals = locals,
-            artifact = "io.grpc:grpc-stub:1.28.0",
-            sha256 = "f10b2f46cb5142f18135dcfb163e4db7b12aab47504746a00c4a2800a791dc01",
-            sha256_src = "eb0ca640f9147ea9c3d94626c55d8a73696401d6e9f37cda7182a2300e8be214",
+            artifact = "io.grpc:grpc-stub:1.36.0",
+            sha256 = "c715c938bf29b210348d25116d906c8d225acb0a6d2b321b0c1f18e4602ce036",
+            sha256_src = "a43dbf45c85f91c8b3873f70563d55805711c9285aa1086a1728614ccd443943",
         )
 
         # OKHttp used by gRPC.
@@ -117,9 +117,9 @@ def gapic_dependencies(no_maven = False, no_swt = False, no_jface = False, local
             maven_jar,
             name = "com_squareup_okio",
             locals = locals,
-            artifact = "com.squareup.okio:okio:1.13.0",
-            sha256 = "734269c3ebc5090e3b23566db558f421f0b4027277c79ad5d176b8ec168bb850",
-            sha256_src = "b0305445ad4001639413951837a2248c5e9ca28386fbae2e31e1556f7710c5a8",
+            artifact = "com.squareup.okio:okio:1.17.5",
+            sha256 = "19a7ff48d86d3cf4497f7f250fbf295f430c13a528dd5b7b203f821802b886ad",
+            sha256_src = "537b41075d390d888aec040d0798211b1702d34f558efc09364b5f7d388ec496",
         )
 
         # Opencensus used by gRPC.
@@ -127,18 +127,18 @@ def gapic_dependencies(no_maven = False, no_swt = False, no_jface = False, local
             maven_jar,
             name = "io_opencensus_api",
             locals = locals,
-            artifact = "io.opencensus:opencensus-api:0.24.0",
-            sha256 = "f561b1cc2673844288e596ddf5bb6596868a8472fd2cb8993953fc5c034b2352",
-            sha256_src = "01693c455b3748a494813ae612e1766c9e804d56561b759d8399270865427bf6",
+            artifact = "io.opencensus:opencensus-api:0.28.0",
+            sha256 = "0c1723f3f6d3061323845ce8b88b35fdda500812e0a75b8eb5fcc4ad8c871a95",
+            sha256_src = "0c6aedc3a87be3b8110eeeb8d7df84d68c3b79831247ddf422d14a2c5faa5fd1",
         )
 
         maybe_repository(
             maven_jar,
             name = "io_opencensus_contrib_grpc_metrics",
             locals = locals,
-            artifact = "io.opencensus:opencensus-contrib-grpc-metrics:0.24.0",
-            sha256 = "875582e093f11950ad3f4a50b5fee33a008023f7d1e47820a1bef05d23b9ed42",
-            sha256_src = "48c84a321af149c35a95b0d433a49c78e21674e10568fbc529675de0ee46fa96",
+            artifact = "io.opencensus:opencensus-contrib-grpc-metrics:0.28.0",
+            sha256 = "3d0cac023d5ee251d89f14b10666455f747cb897fd8ba8e4a64ccdfc619f701c",
+            sha256_src = "84118e73878eab59b0f09dc476def7363c0ccd3e07709637a85beac913cd896e",
         )
 
         # Perfmark used by gRPC.
@@ -146,9 +146,9 @@ def gapic_dependencies(no_maven = False, no_swt = False, no_jface = False, local
             maven_jar,
             name = "io_perfmark_api",
             locals = locals,
-            artifact = "io.perfmark:perfmark-api:0.19.0",
-            sha256 = "b734ba2149712409a44eabdb799f64768578fee0defe1418bb108fe32ea43e1a",
-            sha256_src = "05cfbdd34e6fc1f10181c755cec67cf1ee517dfee615e25d1007a8aabd569dba",
+            artifact = "io.perfmark:perfmark-api:0.23.0",
+            sha256 = "c705b5c10c18ff3032b9e81742bc2f6b0e5607f6a6dfc0c8ad0cff75d4913042",
+            sha256_src = "8b75ae9cac9c14c8b697501adf74584130a307f2851d135e0ada4667cdf3b7b5",
         )
 
         maybe_repository(
@@ -192,9 +192,9 @@ def gapic_dependencies(no_maven = False, no_swt = False, no_jface = False, local
             maven_jar,
             name = "com_google_guava",
             locals = locals,
-            artifact = "com.google.guava:guava:28.2-jre",
-            sha256 = "fc3aa363ad87223d1fbea584eee015a862150f6d34c71f24dc74088a635f08ef",
-            sha256_src = "e4a71a9d1f5f5f886a1802c257d3fcb78c6c234e2e183257f3ed1474802d077b",
+            artifact = "com.google.guava:guava:30.1-jre",
+            sha256 = "e6dd072f9d3fe02a4600688380bd422bdac184caf6fe2418cfdd0934f09432aa",
+            sha256_src = "b17d4974b591e7e45d982d04ce400c424fa95288cbddce17394b65f65bfdec0f",
         )
 
         maybe_repository(
