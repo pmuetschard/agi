@@ -961,6 +961,74 @@ uint32_t VulkanSpy::SpyOverride_vkAllocateMemory(
   return r;
 }
 
+void VulkanSpy::SpyOverride_vkCmdPipelineBarrier(
+    CallObserver*, VkCommandBuffer commandBuffer,
+    VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask,
+    VkDependencyFlags dependencyFlags, uint32_t memoryBarrierCount,
+    const VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount,
+    const VkBufferMemoryBarrier* pBufferMemoryBarriers,
+    uint32_t imageMemoryBarrierCount,
+    const VkImageMemoryBarrier* pImageMemoryBarriers) {
+  VkDevice device = mState.CommandBuffers[commandBuffer]->mDevice;
+  auto& fn = mImports.mVkDeviceFunctions[device];
+  fn.vkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask,
+                          dependencyFlags, memoryBarrierCount, pMemoryBarriers,
+                          bufferMemoryBarrierCount, pBufferMemoryBarriers,
+                          imageMemoryBarrierCount, pImageMemoryBarriers);
+
+  recordExternalBarriers(commandBuffer, bufferMemoryBarrierCount,
+                         pBufferMemoryBarriers, imageMemoryBarrierCount,
+                         pImageMemoryBarriers);
+}
+
+void VulkanSpy::SpyOverride_vkCmdExecuteCommands(
+    CallObserver*, VkCommandBuffer cmdBuffer, uint32_t cmdBufferCount,
+    const VkCommandBuffer* pCommandBuffers) {
+  VkDevice device = mState.CommandBuffers[cmdBuffer]->mDevice;
+  auto& fn = mImports.mVkDeviceFunctions[device];
+  fn.vkCmdExecuteCommands(cmdBuffer, cmdBufferCount, pCommandBuffers);
+
+  // Copy tracked barrier mappings from the secondary buffers to the primary.
+  auto bufIt = mExternalBufferBarriers.find(cmdBuffer);
+  auto imgIt = mExternalImageBarriers.find(cmdBuffer);
+  for (uint32_t i = 0; i < cmdBufferCount; i++) {
+    auto subBufIt = mExternalBufferBarriers.find(pCommandBuffers[i]);
+    if (subBufIt != mExternalBufferBarriers.end()) {
+      if (bufIt == mExternalBufferBarriers.end()) {
+        bufIt = mExternalBufferBarriers
+                    .emplace(cmdBuffer, std::vector<VkBufferMemoryBarrier>())
+                    .first;
+      }
+      bufIt->second.insert(bufIt->second.begin(), subBufIt->second.begin(),
+                           subBufIt->second.end());
+    }
+
+    auto subImgIt = mExternalImageBarriers.find(pCommandBuffers[i]);
+    if (subImgIt != mExternalImageBarriers.end()) {
+      if (imgIt == mExternalImageBarriers.end()) {
+        imgIt = mExternalImageBarriers
+                    .emplace(cmdBuffer, std::vector<VkImageMemoryBarrier>())
+                    .first;
+      }
+      imgIt->second.insert(imgIt->second.begin(), subImgIt->second.begin(),
+                           subImgIt->second.end());
+    }
+  }
+}
+
+uint32_t VulkanSpy::SpyOverride_vkBeginCommandBuffer(
+    CallObserver*, VkCommandBuffer commandBuffer,
+    const VkCommandBufferBeginInfo* pBeginInfo) {
+  VkDevice device = mState.CommandBuffers[commandBuffer]->mDevice;
+  auto& fn = mImports.mVkDeviceFunctions[device];
+  uint32_t res = fn.vkBeginCommandBuffer(commandBuffer, pBeginInfo);
+
+  mExternalBufferBarriers.erase(commandBuffer);
+  mExternalImageBarriers.erase(commandBuffer);
+
+  return res;
+}
+
 // Utility functions
 uint32_t VulkanSpy::numberOfPNext(CallObserver* observer, const void* pNext) {
   uint32_t counter = 0;
@@ -1018,6 +1086,29 @@ void VulkanSpy::recordWaitedFences(CallObserver* observer, VkDevice device,
   }
 
   observer->encode_message(&state);
+}
+
+void VulkanSpy::recordExternalBarriers(
+    VkCommandBuffer commandBuffer, uint32_t bufferMemoryBarrierCount,
+    const VkBufferMemoryBarrier* pBufferMemoryBarriers,
+    uint32_t imageMemoryBarrierCount,
+    const VkImageMemoryBarrier* pImageMemoryBarriers) {
+  static const uint32_t VK_QUEUE_FAMILY_EXTERNAL = ~0U - 1;
+
+  for (uint32_t i = 0; i < bufferMemoryBarrierCount; i++) {
+    if (pBufferMemoryBarriers[i].msrcQueueFamilyIndex ==
+        VK_QUEUE_FAMILY_EXTERNAL) {
+      mExternalBufferBarriers[commandBuffer].push_back(
+          pBufferMemoryBarriers[i]);
+    }
+  }
+
+  for (uint32_t i = 0; i < imageMemoryBarrierCount; i++) {
+    if (pImageMemoryBarriers[i].msrcQueueFamilyIndex ==
+        VK_QUEUE_FAMILY_EXTERNAL) {
+      mExternalImageBarriers[commandBuffer].push_back(pImageMemoryBarriers[i]);
+    }
+  }
 }
 
 }  // namespace gapii
