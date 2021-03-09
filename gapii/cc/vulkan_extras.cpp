@@ -888,16 +888,11 @@ void VulkanSpy::SpyOverride_vkDestroyInstance(
 uint32_t VulkanSpy::SpyOverride_vkCreateBuffer(
     CallObserver*, VkDevice device, const VkBufferCreateInfo* pCreateInfo,
     const VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer) {
-  if (is_suspended()) {
-    VkBufferCreateInfo override_create_info = *pCreateInfo;
-    override_create_info.musage |=
-        VkBufferUsageFlagBits::VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-    return mImports.mVkDeviceFunctions[device].vkCreateBuffer(
-        device, &override_create_info, pAllocator, pBuffer);
-  } else {
-    return mImports.mVkDeviceFunctions[device].vkCreateBuffer(
-        device, pCreateInfo, pAllocator, pBuffer);
-  }
+  VkBufferCreateInfo override_create_info = *pCreateInfo;
+  override_create_info.musage |=
+      VkBufferUsageFlagBits::VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+  return mImports.mVkDeviceFunctions[device].vkCreateBuffer(
+      device, &override_create_info, pAllocator, pBuffer);
 }
 
 // SpyOverride_vkCreateImage adds the TRANSFER_SRC_BIT to images such that we
