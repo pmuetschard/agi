@@ -169,3 +169,37 @@ void SpyOverride_vkFrameBoundaryANDROID(CallObserver*,
                                         VkDevice device,
                                         VkSemaphore semaphore,
                                         VkImage image) {}
+
+std::unordered_map<VkCommandBuffer, std::vector<VkBufferMemoryBarrier>> mExternalBufferBarriers;
+std::unordered_map<VkCommandBuffer, std::vector<VkImageMemoryBarrier>> mExternalImageBarriers;
+
+void recordExternalBarriers(
+    VkCommandBuffer                             commandBuffer,
+    uint32_t                                    bufferMemoryBarrierCount,
+    const VkBufferMemoryBarrier*                pBufferMemoryBarriers,
+    uint32_t                                    imageMemoryBarrierCount,
+    const VkImageMemoryBarrier*                 pImageMemoryBarriers);
+
+void SpyOverride_vkCmdPipelineBarrier(
+    CallObserver*,
+    VkCommandBuffer                             commandBuffer,
+    VkPipelineStageFlags                        srcStageMask,
+    VkPipelineStageFlags                        dstStageMask,
+    VkDependencyFlags                           dependencyFlags,
+    uint32_t                                    memoryBarrierCount,
+    const VkMemoryBarrier*                      pMemoryBarriers,
+    uint32_t                                    bufferMemoryBarrierCount,
+    const VkBufferMemoryBarrier*                pBufferMemoryBarriers,
+    uint32_t                                    imageMemoryBarrierCount,
+    const VkImageMemoryBarrier*                 pImageMemoryBarriers);
+
+void SpyOverride_vkCmdExecuteCommands(
+    CallObserver*,
+    VkCommandBuffer                             commandBuffer,
+    uint32_t                                    commandBufferCount,
+    const VkCommandBuffer*                      pCommandBuffers);
+
+uint32_t SpyOverride_vkBeginCommandBuffer(
+    CallObserver*,
+    VkCommandBuffer                             commandBuffer,
+    const VkCommandBufferBeginInfo*             pBeginInfo);

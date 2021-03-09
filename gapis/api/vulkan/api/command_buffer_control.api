@@ -452,6 +452,7 @@ extern void recordEndCommandBuffer(VkCommandBuffer commandBuffer)
 
 @threadSafety("app")
 @indirect("VkCommandBuffer", "VkDevice")
+@override
 cmd VkResult vkBeginCommandBuffer(
     VkCommandBuffer                 commandBuffer,
     const VkCommandBufferBeginInfo* pBeginInfo) {
@@ -646,6 +647,7 @@ sub void dovkCmdExecuteCommands(ref!vkCmdExecuteCommandsArgs cmds) {
 
 @indirect("VkCommandBuffer", "VkDevice")
 @executed_command_buffer
+@override
 cmd void vkCmdExecuteCommands(
     VkCommandBuffer        commandBuffer,
     u32                    commandBufferCount,
