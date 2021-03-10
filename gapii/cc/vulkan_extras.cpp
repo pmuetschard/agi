@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 #include <bitset>
+#include "gapii/cc/vulkan_external_memory.h"
 #include "gapii/cc/vulkan_layer_extras.h"
 #include "gapii/cc/vulkan_spy.h"
 #include "gapis/api/vulkan/vulkan_pb/extras.pb.h"
@@ -895,8 +896,10 @@ uint32_t VulkanSpy::SpyOverride_vkCreateImage(
   // TODO(b/148857112): do not set TRANSFER_SRC_BIT on images with
   // TRANSIENT_ATTACHMENT_BIT set (this is invalid). For now, while this is
   // invalid, it seems to work fine in practice.
-  override_create_info.musage |=
-      VkImageUsageFlagBits::VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+  if (override_create_info.mformat != VkFormat::VK_FORMAT_UNDEFINED) {
+    override_create_info.musage |=
+        VkImageUsageFlagBits::VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+  }
   return mImports.mVkDeviceFunctions[device].vkCreateImage(
       device, &override_create_info, pAllocator, pImage);
 }
@@ -1023,6 +1026,49 @@ uint32_t VulkanSpy::SpyOverride_vkBeginCommandBuffer(
   mExternalImageBarriers.erase(commandBuffer);
 
   return res;
+}
+
+uint32_t VulkanSpy::SpyOverride_vkQueueSubmit(CallObserver* observer,
+                                              VkQueue queue,
+                                              uint32_t submitCount,
+                                              const VkSubmitInfo* pSubmits,
+                                              VkFence fence) {
+  auto call_orig = [this, queue, submitCount, pSubmits, fence] {
+    VkDevice device = mState.Queues[queue]->mDevice;
+    auto fn = mImports.mVkDeviceFunctions[device];
+    return fn.vkQueueSubmit(queue, submitCount, pSubmits, fence);
+  };
+  if (is_suspended()) {
+    return call_orig();
+  }
+
+  bool hasExternalMemoryBarriers = false;
+  for (uint32_t i = 0; i < submitCount && !hasExternalMemoryBarriers; i++) {
+    for (uint32_t j = 0; j < pSubmits[i].mcommandBufferCount; j++) {
+      VkCommandBuffer cmdBuf = pSubmits[i].mpCommandBuffers[j];
+      if ((mExternalBufferBarriers.find(cmdBuf) !=
+           mExternalBufferBarriers.end()) ||
+          (mExternalImageBarriers.find(cmdBuf) !=
+           mExternalImageBarriers.end())) {
+        hasExternalMemoryBarriers = true;
+        break;
+      }
+    }
+  }
+  if (!hasExternalMemoryBarriers) {
+    return call_orig();
+  }
+
+  ExternalMemory extMem(this, observer, queue, submitCount, pSubmits, fence);
+  if ((extMem.CreateResources() != VkResult::VK_SUCCESS) ||
+      (extMem.RecordCommandBuffers() != VkResult::VK_SUCCESS) ||
+      (extMem.Submit() != VkResult::VK_SUCCESS)) {
+    return call_orig();
+  }
+
+  extMem.SendData();
+  extMem.Cleanup();
+  return VkResult::VK_SUCCESS;
 }
 
 // Utility functions

@@ -170,6 +170,7 @@ void SpyOverride_vkFrameBoundaryANDROID(CallObserver*,
                                         VkSemaphore semaphore,
                                         VkImage image) {}
 
+friend struct ExternalMemory;
 std::unordered_map<VkCommandBuffer, std::vector<VkBufferMemoryBarrier>> mExternalBufferBarriers;
 std::unordered_map<VkCommandBuffer, std::vector<VkImageMemoryBarrier>> mExternalImageBarriers;
 
@@ -203,3 +204,13 @@ uint32_t SpyOverride_vkBeginCommandBuffer(
     CallObserver*,
     VkCommandBuffer                             commandBuffer,
     const VkCommandBufferBeginInfo*             pBeginInfo);
+
+uint32_t SpyOverride_vkQueueSubmit(CallObserver* observer,
+                                   VkQueue queue,
+                                   uint32_t submitCount,
+                                   const VkSubmitInfo* pSubmits,
+                                   VkFence fence);
+
+std::vector<VkBufferImageCopy> BufferImageCopies(
+    gapil::Ref<ImageObject> img, const VkImageSubresourceRange& img_rng,
+    VkDeviceSize &offset);

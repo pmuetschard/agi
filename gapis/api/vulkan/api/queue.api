@@ -85,6 +85,7 @@ cmd void vkGetDeviceQueue(
 @threadSafety("app")
 @indirect("VkQueue", "VkDevice")
 @submission
+@override
 cmd VkResult vkQueueSubmit(
     VkQueue             queue,
     u32                 submitCount,
