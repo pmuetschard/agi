@@ -17,4 +17,21 @@
 #ifndef GAPII_VULKAN_EXTRAS_H_
 #define GAPII_VULKAN_EXTRAS_H_
 
+static inline void set_dispatch_from_parent(void* child, void* parent) {
+  *((const void**)child) = *((const void**)parent);
+}
+
+namespace gapii {
+
+// An invalid value of memory type index
+constexpr uint32_t kInvalidMemoryTypeIndex = 0xFFFFFFFF;
+// The queue family value when it is ignored
+constexpr uint32_t kQueueFamilyIgnore = 0xFFFFFFFF;
+
+uint32_t GetMemoryTypeIndexForStagingResources(
+    const VkPhysicalDeviceMemoryProperties& phy_dev_prop,
+    uint32_t requirement_type_bits);
+
+}  // namespace gapii
+
 #endif

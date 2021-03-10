@@ -47,10 +47,6 @@ struct destroyer {
   std::function<void(void)> destroy;
 };
 
-static inline void set_dispatch_from_parent(void* child, void* parent) {
-  *((const void**)child) = *((const void**)parent);
-}
-
 // Declared in api_spy.h.tmpl
 bool VulkanSpy::observeFramebuffer(CallObserver* observer, uint32_t* w,
                                    uint32_t* h, std::vector<uint8_t>* data) {
