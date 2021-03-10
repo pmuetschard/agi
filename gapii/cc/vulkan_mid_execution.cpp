@@ -18,6 +18,7 @@
 
 #include "gapii/cc/state_serializer.h"
 #include "gapii/cc/vulkan_exports.h"
+#include "gapii/cc/vulkan_extras.h"
 #include "gapii/cc/vulkan_spy.h"
 
 #include "gapis/memory/memory_pb/memory.pb.h"
@@ -49,11 +50,6 @@ gapil::Ref<QueueObject> GetQueue(const VkQueueToQueueObject__R& queues,
   }
   return nullptr;
 }
-
-// An invalid value of memory type index
-const uint32_t kInvalidMemoryTypeIndex = 0xFFFFFFFF;
-// The queue family value when it is ignored
-const uint32_t kQueueFamilyIgnore = 0xFFFFFFFF;
 
 // Try to find memory type within the types specified in
 // |requirement_type_bits| which is host-visible and non-host-coherent. If a
