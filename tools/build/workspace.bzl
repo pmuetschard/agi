@@ -38,8 +38,8 @@ def gapid_dependencies(android = True, mingw = True, locals = {}):
         locals = locals,
         organization = "bazelbuild",
         project = "rules_go",
-        commit = "a94abcb35d08aac590dac3a1ac5961cfb16caf05",  # 0.22.1
-        sha256 = "9b9cadda86ba1769cd944f17ccc2f5445de771b2d7322930929a106246cb0125",
+        commit = "ddc5747aa3a52e7703f48281d82ea06985d95628",  # 0.26.0
+        sha256 = "15f79296dc53ce569308288ee50fd75dac0bb35242955e68da921e647b106909",
     )
 
     maybe_repository(
@@ -48,8 +48,18 @@ def gapid_dependencies(android = True, mingw = True, locals = {}):
         locals = locals,
         organization = "bazelbuild",
         project = "bazel-gazelle",
-        commit = "9b9f0226e01d10a70cbf268f9967cb715c8ff067",  # 0.20.0
-        sha256 = "def44e3a1af0f1ea63910e99f8ad5bd7760416abe165c1511b6b93f65ad10a97",
+        commit = "e9091445339de2ba7c01c3561f751b64a7fab4a5",  # 0.23.0
+        sha256 = "03e266ed67fd21f6fbede975773a569d397312daae71980d34ff7f7e087b7b14",
+    )
+
+    maybe_repository(github_repository,
+        name = "net_zlib", # name used by rules_go
+        locals = locals,
+        organization = "madler",
+        project = "zlib",
+        commit = "cacf7f1d4e3d44d871b605da3b647f07d718623f",
+        build_file = "@gapid//tools/build/third_party:zlib.BUILD",
+        sha256 = "1cce3828ec2ba80ff8a4cac0ab5aa03756026517154c4b450e617ede751d41bd",
     )
 
     maybe_repository(
@@ -58,8 +68,8 @@ def gapid_dependencies(android = True, mingw = True, locals = {}):
         locals = locals,
         organization = "google",
         project = "protobuf",
-        commit = "d0bfd5221182da1a7cc280f3337b5e41a89539cf",  # 3.11.4
-        sha256 = "c5fd8f99f0d30c6f9f050bf008e021ccc70d7645ac1f64679c6038e07583b2f3",
+        commit = "4fff47a41811eeaef8add8def480062282292ce5",  # 3.15.5
+        sha256 = "d2789ef50c30716749d45ec7ff91be5aac2041ef8d3889f653a139a6d3340e0b",
         repo_mapping = {"@zlib": "@net_zlib"},
     )
 
@@ -69,33 +79,9 @@ def gapid_dependencies(android = True, mingw = True, locals = {}):
         locals = locals,
         organization = "grpc",
         project = "grpc",
-        commit = "c599e6a922a80e40e24a2d3c994a6dd51046796b",  # 1.22.1
-        sha256 = "d17ead923510b3c8a03eec623fffe4cba64d43e10b3695f027a1c8f10c03756a",
-        # This patch works around a naming conflict in grpc which leads to
-        # compilation issues in recent gcc/glibc. This issue is fixed on recent
-        # grpc versions (since
-        # https://github.com/grpc/grpc/commit/de6255941a5e1c2fb2d50e57f84e38c09f45023d),
-        # but updating our grpc version leads to errors in compiling the abseil
-        # dependency of grpc
-        # (https://github.com/abseil/abseil-cpp/issues/326). We tried to pull
-        # abseil ourselves and patch it, but abseil also fails to compile with
-        # gcc on windows, so we choose to patch grpc directly. Once grpc has a
-        # version that builds fine on all our targets, we can update grpc and
-        # drop this patch.
-        patches = [
-            "@gapid//tools/build/third_party/com_github_grpc_grpc:com_github_grpc_grpc_fix.patch",
-        ],
-    )
-    _grpc_deps(locals)
-
-    maybe_repository(
-        github_repository,
-        name = "rules_python",
-        locals = locals,
-        organization = "bazelbuild",
-        project = "rules_python",
-        commit = "9150caa9d857e3768a4cf5ef6c3e88668b7ec84f",  # 0.0.1
-        sha256 = "8eece92b8e286ac60b2847f0f00d0a949b3b0192669ffcc9e8d3c8365f889d1e",
+        commit = "c3438a0c5d7bc499eb31fd4853ca72c771f758a5",  # 1.36.2
+        sha256 = "359db066ea7d8a54d343d95efa0e30192c39fa1a55e00af3df6c16748018d45c",
+        repo_mapping = {"@zlib": "@net_zlib"},
     )
 
     ###########################################
@@ -150,6 +136,23 @@ def gapid_dependencies(android = True, mingw = True, locals = {}):
         commit = "8af9b8c2b889d80c22d6bc26ba0df1afb79a30db",
         build_file = "@gapid//tools/build/third_party:cityhash.BUILD",
         sha256 = "3524f5ed43143974a29fddeeece29c8b6348f05db08dd180452da01a2837ddce",
+    )
+
+    # Override the gRPC abseil dependency, so we can patch it.
+    maybe_repository(
+        github_repository,
+        name = "com_google_absl",
+        locals = locals,
+        organization = "abseil",
+        project = "abseil-cpp",
+        commit = "0f3bb466b868b523cf1dc9b2aaaed65c77b28862",  # LTS 20200923, Patch 2
+        sha256 = "9929f3662141bbb9c6c28accf68dcab34218c5ee2d83e6365d9cb2594b3f3171",
+        patches = [
+            # Workaround for https://github.com/abseil/abseil-cpp/issues/326.
+            "@gapid//tools/build/third_party:abseil_macos_fix.patch",
+            # Allows building on Windows with MinGW.
+            "@gapid//tools/build/third_party:abseil_windows_fix.patch",
+        ],
     )
 
     maybe_repository(
@@ -351,62 +354,3 @@ def gapid_dependencies(android = True, mingw = True, locals = {}):
 
     if mingw:
         cc_configure()
-
-# Function to setup all the GRPC deps and bindings.
-def _grpc_deps(locals):
-    maybe_repository(http_archive,
-        name = "boringssl",
-        locals = locals,
-        # on the master-with-bazel branch
-        url = "https://boringssl.googlesource.com/boringssl/+archive/afc30d43eef92979b05776ec0963c9cede5fb80f.tar.gz",
-    )
-
-    maybe_repository(github_repository,
-        name = "net_zlib", # name used by rules_go
-        locals = locals,
-        organization = "madler",
-        project = "zlib",
-        commit = "cacf7f1d4e3d44d871b605da3b647f07d718623f",
-        build_file = "@gapid//tools/build/third_party:zlib.BUILD",
-        sha256 = "1cce3828ec2ba80ff8a4cac0ab5aa03756026517154c4b450e617ede751d41bd",
-    )
-
-    maybe_repository(github_repository,
-        name = "com_github_nanopb_nanopb",
-        locals = locals,
-        organization = "nanopb",
-        project = "nanopb",
-        commit = "f8ac463766281625ad710900479130c7fcb4d63b",
-        build_file = "@com_github_grpc_grpc//third_party:nanopb.BUILD",
-        sha256 = "e7e635b26fa11246e8fd1c46df141d2f094a659b905ac61e957234018308f883",
-    )
-
-    native.bind(
-        name = "libssl",
-        actual = "@boringssl//:ssl",
-    )
-
-    native.bind(
-        name = "madler_zlib",
-        actual = "@net_zlib//:z",
-    )
-
-    native.bind(
-        name = "nanopb",
-        actual = "@com_github_nanopb_nanopb//:nanopb",
-    )
-
-    native.bind(
-        name = "protobuf",
-        actual = "@com_google_protobuf//:protobuf",
-    )
-
-    native.bind(
-        name = "protobuf_clib",
-        actual = "@com_google_protobuf//:protoc_lib",
-    )
-
-    native.bind(
-        name = "protobuf_headers",
-        actual = "@com_google_protobuf//:protobuf_headers",
-    )

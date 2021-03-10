@@ -966,8 +966,6 @@ func (sb *stateBuilder) transferImageQueueFamilyOwnership(infos ...imageQueueFam
 	return nil
 }
 
-func (sb *stateBuilder) transitImageLayoutTransferImageOwnership(image VkImage)
-
 type imageSubRangeInfo struct {
 	aspectMask     VkImageAspectFlags
 	baseMipLevel   uint32

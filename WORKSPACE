@@ -31,7 +31,12 @@ gapic_third_party()
 load("@io_bazel_rules_go//go:deps.bzl", "go_rules_dependencies", "go_register_toolchains")
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 go_rules_dependencies()
-go_register_toolchains()
+go_register_toolchains("1.16.2")
 
 # gazelle:repo bazel_gazelle
 gazelle_dependencies()
+
+load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", "grpc_deps")
+grpc_deps()
+load("@com_github_grpc_grpc//bazel:grpc_extra_deps.bzl", "grpc_extra_deps")
+grpc_extra_deps()
