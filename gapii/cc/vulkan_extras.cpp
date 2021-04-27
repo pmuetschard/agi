@@ -1141,24 +1141,32 @@ void VulkanSpy::recordWaitedFences(CallObserver* observer, VkDevice device,
   observer->encode_message(&state);
 }
 
+namespace {
+
+constexpr uint32_t VK_QUEUE_FAMILY_EXTERNAL = ~0U - 1;
+constexpr uint32_t VK_QUEUE_FAMILY_FOREIGN_EXT = ~0U - 2;
+
+constexpr bool isExternalQueue(uint32_t queueFamily) {
+  return queueFamily == VK_QUEUE_FAMILY_EXTERNAL ||
+         queueFamily == VK_QUEUE_FAMILY_FOREIGN_EXT;
+}
+
+}  // namespace
+
 void VulkanSpy::recordExternalBarriers(
     VkCommandBuffer commandBuffer, uint32_t bufferMemoryBarrierCount,
     const VkBufferMemoryBarrier* pBufferMemoryBarriers,
     uint32_t imageMemoryBarrierCount,
     const VkImageMemoryBarrier* pImageMemoryBarriers) {
-  static const uint32_t VK_QUEUE_FAMILY_EXTERNAL = ~0U - 1;
-
   for (uint32_t i = 0; i < bufferMemoryBarrierCount; i++) {
-    if (pBufferMemoryBarriers[i].msrcQueueFamilyIndex ==
-        VK_QUEUE_FAMILY_EXTERNAL) {
+    if (isExternalQueue(pBufferMemoryBarriers[i].msrcQueueFamilyIndex)) {
       mExternalBufferBarriers[commandBuffer].push_back(
           pBufferMemoryBarriers[i]);
     }
   }
 
   for (uint32_t i = 0; i < imageMemoryBarrierCount; i++) {
-    if (pImageMemoryBarriers[i].msrcQueueFamilyIndex ==
-        VK_QUEUE_FAMILY_EXTERNAL) {
+    if (isExternalQueue(pImageMemoryBarriers[i].msrcQueueFamilyIndex)) {
       mExternalImageBarriers[commandBuffer].push_back(pImageMemoryBarriers[i]);
     }
   }
