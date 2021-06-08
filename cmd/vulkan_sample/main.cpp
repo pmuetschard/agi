@@ -600,7 +600,8 @@ int main(int argc, const char** argv) {
 
     // Enable optional extensions.
     for (auto& prop : extension_properties) {
-      if (std::string(prop.extensionName) == VK_EXT_DEBUG_UTILS_EXTENSION_NAME) {
+      if (std::string(prop.extensionName) ==
+          VK_EXT_DEBUG_UTILS_EXTENSION_NAME) {
         instance_extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
       }
     }
@@ -615,14 +616,15 @@ int main(int argc, const char** argv) {
                                "sample_engine",
                                0,
                                VK_MAKE_VERSION(1, 0, 0)};
-    VkInstanceCreateInfo create_info{VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
-                                     nullptr,
-                                     0,
-                                     &app_info,
-                                     0,
-                                     nullptr,
-                                     static_cast<uint32_t>(instance_extensions.size()),
-                                     instance_extensions.data()};
+    VkInstanceCreateInfo create_info{
+        VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
+        nullptr,
+        0,
+        &app_info,
+        0,
+        nullptr,
+        static_cast<uint32_t>(instance_extensions.size()),
+        instance_extensions.data()};
     REQUIRE_SUCCESS(vkCreateInstance(&create_info, nullptr, &instance));
   }
 
@@ -1122,11 +1124,11 @@ int main(int argc, const char** argv) {
         vkCreateRenderPass(device, &create_info, nullptr, &render_pass));
     if (vkSetDebugUtilsObjectNameEXT != nullptr) {
       VkDebugUtilsObjectNameInfoEXT info{
-        VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
-        nullptr,
-        VK_OBJECT_TYPE_RENDER_PASS,
-        reinterpret_cast<uint64_t>(render_pass),
-        "KubieRenderPass",
+          VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
+          nullptr,
+          VK_OBJECT_TYPE_RENDER_PASS,
+          reinterpret_cast<uint64_t>(render_pass),
+          "KubieRenderPass",
       };
       vkSetDebugUtilsObjectNameEXT(device, &info);
     }
@@ -1473,11 +1475,11 @@ int main(int argc, const char** argv) {
       if (vkSetDebugUtilsObjectNameEXT != nullptr) {
         std::string name = "KubieRenderCommandBuffer" + std::to_string(i);
         VkDebugUtilsObjectNameInfoEXT info{
-          VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
-          nullptr,
-          VK_OBJECT_TYPE_COMMAND_BUFFER,
-          reinterpret_cast<uint64_t>(render_command_buffers[i]),
-          name.data(),
+            VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
+            nullptr,
+            VK_OBJECT_TYPE_COMMAND_BUFFER,
+            reinterpret_cast<uint64_t>(render_command_buffers[i]),
+            name.data(),
         };
         vkSetDebugUtilsObjectNameEXT(device, &info);
       }
@@ -1592,11 +1594,11 @@ int main(int argc, const char** argv) {
                                                &staging_command_buffer));
       if (vkSetDebugUtilsObjectNameEXT != nullptr) {
         VkDebugUtilsObjectNameInfoEXT info{
-          VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
-          nullptr,
-          VK_OBJECT_TYPE_COMMAND_BUFFER,
-          reinterpret_cast<uint64_t>(staging_command_buffer),
-          "KubieStagingCommandBuffer",
+            VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
+            nullptr,
+            VK_OBJECT_TYPE_COMMAND_BUFFER,
+            reinterpret_cast<uint64_t>(staging_command_buffer),
+            "KubieStagingCommandBuffer",
         };
         vkSetDebugUtilsObjectNameEXT(device, &info);
       }
@@ -1725,13 +1727,14 @@ int main(int argc, const char** argv) {
       REQUIRE_SUCCESS(
           vkCreateFramebuffer(device, &create_info, nullptr, &framebuffer));
       if (vkSetDebugUtilsObjectNameEXT != nullptr) {
-        std::string name = "KubieFrameBuffer" + std::to_string(i) + "." + std::to_string(j);
+        std::string name =
+            "KubieFrameBuffer" + std::to_string(i) + "." + std::to_string(j);
         VkDebugUtilsObjectNameInfoEXT info{
-          VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
-          nullptr,
-          VK_OBJECT_TYPE_FRAMEBUFFER,
-          reinterpret_cast<uint64_t>(framebuffer),
-          name.data(),
+            VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
+            nullptr,
+            VK_OBJECT_TYPE_FRAMEBUFFER,
+            reinterpret_cast<uint64_t>(framebuffer),
+            name.data(),
         };
         vkSetDebugUtilsObjectNameEXT(device, &info);
       }
