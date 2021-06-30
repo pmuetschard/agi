@@ -31,7 +31,6 @@ import com.google.gapid.models.Settings;
 import com.google.gapid.proto.SettingsProto;
 import com.google.gapid.proto.service.Service;
 import com.google.gapid.proto.service.path.Path;
-import com.google.gapid.util.Experimental;
 import com.google.gapid.views.CommandTree;
 import com.google.gapid.views.DeviceDialog;
 import com.google.gapid.views.FramebufferView;
@@ -208,9 +207,6 @@ public class GraphicsTraceView extends Composite
   private MenuManager createViewTabsMenu() {
     MenuManager manager = new MenuManager("&Tabs");
     for (MainTab.Type type : MainTab.Type.values()) {
-      if (type == MainTab.Type.Performance && !Experimental.enablePerfTab(models.settings)) {
-        continue;
-      }
       Action action = type.createAction(shown -> {
         if (shown) {
           showTab(type);
@@ -262,9 +258,6 @@ public class GraphicsTraceView extends Composite
       SettingsProto.TabsOrBuilder sTabs = models.settings.tabs();
       Set<Type> allTabs = Sets.newLinkedHashSet(Arrays.asList(Type.values()));
       allTabs.removeAll(hidden);
-      if (!Experimental.enablePerfTab(models.settings)) {
-        allTabs.remove(MainTab.Type.Performance);
-      }
       Iterator<String> structs = Splitter.on(';')
           .trimResults()
           .omitEmptyStrings()
