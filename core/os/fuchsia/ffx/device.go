@@ -93,7 +93,7 @@ func newDevice(ctx context.Context, serial string) (*binding, error) {
 				Serial:        serial,
 				Configuration: &device.Configuration{},
 			},
-			LastStatus: bind.Status_Online,
+			LastStatus: bind.Online,
 		},
 	}
 
