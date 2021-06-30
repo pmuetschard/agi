@@ -28,7 +28,6 @@ go_library(
         "registry.go",
         "simple.go",
     ],
-    embed = [":bind_go_proto"],
     importpath = "github.com/google/gapid/core/os/device/bind",
     visibility = ["//visibility:public"],
     deps = [
@@ -41,17 +40,4 @@ go_library(
         "//core/os/shell:go_default_library",
         "//gapis/perfetto:go_default_library",
     ],
-)
-
-proto_library(
-    name = "bind_proto",
-    srcs = ["bind.proto"],
-    visibility = ["//visibility:public"],
-)
-
-go_proto_library(
-    name = "bind_go_proto",
-    importpath = "github.com/google/gapid/core/os/device/bind",
-    proto = ":bind_proto",
-    visibility = ["//visibility:public"],
 )
